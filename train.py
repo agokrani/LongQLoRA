@@ -113,11 +113,11 @@ def setup_everything():
 
 
 def load_model_and_tokenizer(args, training_args):
-    config = AutoConfig.from_pretrained(args.model_name_or_path, trust_remote_code=True)
+    config = AutoConfig.from_pretrained(args.model_name_or_path, cache_dir=args.cache_dir)
     config.use_cache = False
     model_type = config.model_type
-    assert model_type == 'llama', "Only support llama and gpt-neox for now"
-    replace_llama_attn(args.use_flash_attn)
+    #assert model_type == 'llama', "Only support llama and gpt-neox for now"
+    #replace_llama_attn(args.use_flash_attn)
 
     # 修改RoPE的position最大长度
     orig_ctx_len = getattr(config, "max_position_embeddings", None)
@@ -138,7 +138,7 @@ def load_model_and_tokenizer(args, training_args):
         device_map=device_map,
         load_in_4bit=True,
         torch_dtype=torch.float16,
-        trust_remote_code=True,
+        cache_dir=args.cache_dir,
         quantization_config=BitsAndBytesConfig(
             load_in_4bit=True,
             bnb_4bit_compute_dtype=torch.float16,

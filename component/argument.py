@@ -11,6 +11,7 @@ class LongQLoRAArguments:
     model_max_length: int = field(metadata={"help": "模型位置编码扩展为该长度"})
     train_file: str = field(metadata={"help": "训练数据路径"})
     model_name_or_path: str = field(metadata={"help": "预训练权重路径"})
+    cache_dir: str = field(metadata={"help": "Huggingface 缓存路径"})
     sft: bool = field(metadata={"help": "True为sft，False则进行自回归训练"})
 
     target_modules: str = field(default=None, metadata={
