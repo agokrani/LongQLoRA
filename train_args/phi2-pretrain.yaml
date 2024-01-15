@@ -1,6 +1,6 @@
 output_dir: ./output/phi2-pretrain
 model_name_or_path: susnato/phi-2
-train_file: ./data/pretrain/pretrain_dummy_data.jsonl
+train_file: ./data/pretrain/iCliniq_1k.jsonl
 deepspeed: ./train_args/deepspeed/deepspeed_config_s2.json
 sft: false
 cache_dir: /mnt/c/Users/amangokrani/OneDrive - Microsoft/Personal/Huggingface/models
