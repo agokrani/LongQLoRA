@@ -6,7 +6,7 @@ from transformers import (
     AutoConfig
 )
 import argparse
-import logging
+from loguru import logger
 import os
 from os.path import join
 import yaml
@@ -22,9 +22,9 @@ from component.dataset import PretrainDataset, VicunaSFTDataset
 from component.argument import LongQLoRAArguments
 from component.trainer import LoRATrainer
 from component.loss import CausalLMLoss
-from attention.llama_attn_replace import replace_llama_attn
+#from attention.llama_attn_replace import replace_llama_attn
 
-logger = logging.getLogger(__name__)
+#logger = logging.getLogger(__name__)
 def verify_model_dtype(model):
     """
     查看模型种各种类型的参数的情况
@@ -176,6 +176,7 @@ def insert_adapter(args, model):
     else:
         target_modules = find_all_linear_names(model)
     # 初始化lora配置
+    
     config = LoraConfig(
         r=args.lora_rank,
         lora_alpha=args.lora_alpha,
@@ -218,7 +219,7 @@ def init_components(args, training_args):
     training_args.ddp_find_unused_parameters = False
     # 加载model和tokenizer
     model, tokenizer = load_model_and_tokenizer(args, training_args)
-    import pdb;pdb.set_trace()
+    
     # 插入adapter
     model = insert_adapter(args, model)
     # 初始化损失函数

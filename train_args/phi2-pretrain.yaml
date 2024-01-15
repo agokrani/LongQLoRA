@@ -3,7 +3,7 @@ model_name_or_path: susnato/phi-2
 train_file: ./data/pretrain/iCliniq_1k.jsonl
 deepspeed: ./train_args/deepspeed/deepspeed_config_s2.json
 sft: false
-cache_dir: /mnt/c/Users/amangokrani/OneDrive - Microsoft/Personal/Huggingface/models
+cache_dir: /workspace/models
 
 num_train_epochs: 1
 max_steps: 1000
