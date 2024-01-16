@@ -147,6 +147,7 @@ def load_model_and_tokenizer(args, training_args):
             llm_int8_threshold=6.0,
             llm_int8_has_fp16_weight=False,
         ),
+        attn_implementation="flash_attention_2" if args.use_flash_attn else "eager"
     )
 
     # 加载tokenizer
