@@ -1,5 +1,5 @@
 output_dir: /workspace/models/phi2-pretrain
-model_name_or_path: susnato/phi-2
+model_name_or_path: microsoft/phi-2
 train_file: ./data/pretrain/iCliniq_1k.jsonl
 deepspeed: ./train_args/deepspeed/deepspeed_config_s2.json
 sft: false
@@ -13,8 +13,8 @@ gradient_accumulation_steps: 8
 max_seq_length: 8192
 model_max_length: 8192
 
-learning_rate: 0.00005
-logging_steps: 10
+learning_rate: 0.0002
+logging_steps: 1
 save_steps: 100
 save_total_limit: 3
 lr_scheduler_type: cosine
@@ -35,4 +35,4 @@ save_strategy: steps
 weight_decay: 0
 max_grad_norm: 0.3
 remove_unused_columns: false
-use_flash_attn: false
+use_flash_attn: true
