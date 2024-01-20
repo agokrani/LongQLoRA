@@ -14,7 +14,7 @@ from flash_attn.flash_attn_interface import (
     flash_attn_varlen_kvpacked_func,
     flash_attn_varlen_qkvpacked_func
 )
-from transformers.models.phi.modeling_phi import apply_rotary_pos_emb, repeat_kv, rotate_half
+from transformers.models.phi.modeling_phi import apply_rotary_pos_emb, rotate_half
 from flash_attn.bert_padding import unpad_input, pad_input
 import math
 
@@ -40,7 +40,6 @@ def forward_flashattn(
         warnings.warn(
             "Output attentions is not supported for patched `LlamaAttention`, returning `None` instead."
         )
-
     bsz, q_len, _ = hidden_states.size()
 
     query_states = self.q_proj(hidden_states)
@@ -133,8 +132,8 @@ def forward_flashattn(
         )
 
     # repeat k/v heads if n_kv_heads < n_heads
-    key_states = repeat_kv(key_states, self.num_key_value_groups)
-    value_states = repeat_kv(value_states, self.num_key_value_groups)
+    #key_states = repeat_kv(key_states, self.num_key_value_groups)
+    #value_states = repeat_kv(value_states, self.num_key_value_groups)
 
     # Flash attention codes from
     # https://github.com/HazyResearch/flash-attention/blob/main/flash_attn/flash_attention.py
@@ -182,7 +181,7 @@ def forward_flashattn(
     output = output.reshape(bsz, 2, q_len, nheads // 2, self.head_dim).transpose(1, 2).reshape(bsz, q_len, nheads,
                                                                                                self.head_dim)
 
-    return self.o_proj(rearrange(output, "b s h d -> b s (h d)")), None, past_key_value
+    return self.dense(rearrange(output, "b s h d -> b s (h d)")), None, past_key_value
 
 def forward_flashattn_full(
     self,
@@ -527,7 +526,7 @@ def replace_llama_attn(use_flash_attn=True, use_full=False, inference=False):
             transformers.models.phi.modeling_phi.PhiModel._prepare_decoder_attention_mask = (
                 _prepare_decoder_attention_mask
             )
-            transformers.models.phi.modeling_phi.PhiAttention.forward = forward_flashattn_full if use_full else forward_flashattn
+            transformers.models.phi.modeling_phi.PhiFlashAttention2.forward = forward_flashattn_full if use_full else forward_flashattn
     else:
         raise NotImplementedError
         #transformers.models.llama.modeling_llama.LlamaAttention.forward = forward_noflashattn
