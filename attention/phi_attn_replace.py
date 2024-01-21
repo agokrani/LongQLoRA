@@ -14,7 +14,7 @@ from flash_attn.flash_attn_interface import (
     flash_attn_varlen_kvpacked_func,
     flash_attn_varlen_qkvpacked_func
 )
-from transformers.models.phi.modeling_phi import apply_rotary_pos_emb, rotate_half
+from transformers.models.phi.modeling_phi import apply_rotary_pos_emb, repeat_kv, rotate_half
 from flash_attn.bert_padding import unpad_input, pad_input
 import math
 

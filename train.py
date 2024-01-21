@@ -22,7 +22,7 @@ from component.dataset import PretrainDataset, VicunaSFTDataset
 from component.argument import LongQLoRAArguments
 from component.trainer import LoRATrainer
 from component.loss import CausalLMLoss
-#from attention.llama_attn_replace import replace_llama_attn
+from attention.phi_attn_replace import replace_llama_attn
 
 #logger = logging.getLogger(__name__)
 def verify_model_dtype(model):
@@ -117,7 +117,8 @@ def load_model_and_tokenizer(args, training_args):
     config.use_cache = False
     model_type = config.model_type
     #assert model_type == 'llama', "Only support llama and gpt-neox for now"
-    #replace_llama_attn(args.use_flash_attn)
+    replace_llama_attn(args.use_flash_attn)
+
 
     # 修改RoPE的position最大长度
     orig_ctx_len = getattr(config, "max_position_embeddings", None)
@@ -149,7 +150,7 @@ def load_model_and_tokenizer(args, training_args):
         ),
         attn_implementation="flash_attention_2" if args.use_flash_attn else "eager"
     )
-
+    
     # 加载tokenizer
     tokenizer = AutoTokenizer.from_pretrained(
         args.model_name_or_path,
